@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-rollout
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-web
+  namespace: cka-rollout
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: release-web
+  template:
+    metadata:
+      labels:
+        app: release-web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.27.5
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-web
+  namespace: cka-rollout
+spec:
+  selector:
+    app: release-web
+  ports:
+  - port: 80
+    targetPort: 80
