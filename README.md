@@ -1,6 +1,6 @@
 # CKA 命令行实操练习
 
-本仓库收录依据 [Linux Foundation CKA 考纲](https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/)编写的原创练习题。题目使用本地 Podman、kind 和 kubectl 搭建环境，模拟按要求操作、排查并验证 Kubernetes 资源的过程。kind 环境与正式考试环境并不完全相同。
+本仓库收录依据 [Linux Foundation CKA 考纲](https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/)编写的原创练习题。题目使用本地 kind、kubectl 和可用的容器运行时搭建环境，模拟按要求操作、排查并验证 Kubernetes 资源的过程。kind 环境与正式考试环境并不完全相同。
 
 ## 开始练习
 
@@ -11,7 +11,7 @@
 3. 独立完成并运行验收命令。需要复盘时，再阅读 `解题思路.md`；考纲依据和资料链接见 `参考资料.md`。
 4. 重练前按该题 `环境准备.md` 中的说明重置初始状态。
 
-首次使用请从[第 1 题环境准备](01_恢复Service流量/环境准备.md)开始。需要 `kind` v0.33.0 或更新版本、`kubectl` 和已启动的 Podman；具体命令见环境准备文档，集群配置见同目录的 `kind-config.yaml`。
+首次使用请从[第 1 题环境准备](01_恢复Service流量/环境准备.md)开始。需要 `kind` v0.33.0 或更新版本、`kubectl` 和已启动的 Docker、Podman 或 nerdctl 等 kind 支持的运行时。kind 默认自动选择运行时；具体命令见环境准备文档，集群配置见同目录的 `kind-config.yaml`。
 
 ## 题目目录
 

@@ -2,3 +2,25 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: cka-storage
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: archive-dir-init
+  namespace: cka-storage
+spec:
+  restartPolicy: Never
+  nodeSelector:
+    kubernetes.io/hostname: cka-lab-worker
+  containers:
+  - name: init
+    image: busybox:1.36
+    command: ["sh", "-c", "mkdir -p /data && rm -f /data/check.txt"]
+    volumeMounts:
+    - name: archive
+      mountPath: /data
+  volumes:
+  - name: archive
+    hostPath:
+      path: /var/local/cka-archive
+      type: DirectoryOrCreate
