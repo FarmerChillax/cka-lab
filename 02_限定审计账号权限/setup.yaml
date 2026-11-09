@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-lab
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: runtime
+  namespace: cka-lab
+data:
+  mode: practice
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: auditor
+  namespace: cka-lab
