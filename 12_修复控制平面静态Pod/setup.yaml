@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: static-web-manifest
+  namespace: kube-system
+data:
+  cka-node-web.yaml: |
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: cka-node-web
+      namespace: kube-system
+      labels:
+        app: cka-node-web
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.27.5
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: settings
+          mountPath: /etc/cka-settings
+          readOnly: true
+      volumes:
+      - name: settings
+        configMap:
+          name: cka-node-web-settings
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: static-web-seed
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: cka-lab-control-plane
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      restartPolicy: Never
+      containers:
+      - name: seed
+        image: busybox:1.36
+        command: ["sh", "-c", "cp /source/cka-node-web.yaml /host-manifests/cka-node-web.yaml"]
+        volumeMounts:
+        - name: source
+          mountPath: /source
+        - name: host-manifests
+          mountPath: /host-manifests
+      volumes:
+      - name: source
+        configMap:
+          name: static-web-manifest
+      - name: host-manifests
+        hostPath:
+          path: /etc/kubernetes/manifests
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cka-node-web
+  namespace: kube-system
+spec:
+  selector:
+    app: cka-node-web
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-web-probe
+  namespace: kube-system
+spec:
+  containers:
+  - name: probe
+    image: busybox:1.36
+    command: ["sh", "-c", "sleep 3600"]

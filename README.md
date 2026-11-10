@@ -25,5 +25,10 @@
 | [06](06_回滚失败的Deployment/题目.md) | 回滚失败的 Deployment：版本历史与滚动更新排障 | 15 分钟 |
 | [07](07_排查Pod内DNS解析/题目.md) | 排查 Pod 内 DNS 解析：Service 名称与客户端 DNS 策略 | 18 分钟 |
 | [08](08_创建带校验的CRD/题目.md) | 创建带校验的 CRD：结构化 schema、status 与打印列 | 20 分钟 |
+| [09](09_轮换不可变应用配置/题目.md) | 轮换不可变应用配置：ConfigMap、Secret 与 projected 卷 | 18 分钟 |
+| [10](10_配置Ingress多路径TLS/题目.md) | 配置 Ingress 多路径 TLS：路径优先级、证书与集群内验证 | 22 分钟 |
+| [11](11_修复HPA指标链路/题目.md) | 修复 HPA 指标链路：Metrics API、kubelet TLS 与资源请求 | 22 分钟 |
+| [12](12_修复控制平面静态Pod/题目.md) | 修复控制平面静态 Pod：节点调试、主机清单与镜像 Pod | 24 分钟 |
+| [13](13_修复动态卷延迟绑定/题目.md) | 修复动态卷延迟绑定：StorageClass、StatefulSet 与拓扑感知 | 24 分钟 |
 
 每题按 `环境准备.md`、`题目.md`、`解题思路.md` 和 `参考资料.md` 组织，环境配置另存为可直接使用的文件。仓库编写约定见 [AGENTS.md](AGENTS.md)。

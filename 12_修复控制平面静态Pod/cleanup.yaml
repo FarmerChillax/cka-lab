@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: static-web-cleanup
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: cka-lab-control-plane
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      restartPolicy: Never
+      containers:
+      - name: cleanup
+        image: busybox:1.36
+        command: ["sh", "-c", "rm -f /host-manifests/cka-node-web.yaml"]
+        volumeMounts:
+        - name: host-manifests
+          mountPath: /host-manifests
+      volumes:
+      - name: host-manifests
+        hostPath:
+          path: /etc/kubernetes/manifests
+          type: Directory

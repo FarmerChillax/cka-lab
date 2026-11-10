@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-dynamic-storage
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-immediate
+provisioner: rancher.io/local-path
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ledger
+  namespace: cka-dynamic-storage
+spec:
+  clusterIP: None
+  selector:
+    app: ledger
+  ports:
+  - name: peer
+    port: 80
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ledger
+  namespace: cka-dynamic-storage
+spec:
+  serviceName: ledger
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ledger
+  template:
+    metadata:
+      labels:
+        app: ledger
+    spec:
+      nodeSelector:
+        cka.storage/profile: fast
+      containers:
+      - name: ledger
+        image: busybox:1.36
+        command: ["sh", "-c", "touch /data/ledger.log; tail -f /data/ledger.log"]
+        volumeMounts:
+        - name: data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: local-immediate
+      resources:
+        requests:
+          storage: 100Mi
