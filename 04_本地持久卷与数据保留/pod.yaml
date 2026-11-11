@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: archive-check
+spec:
+  containers:
+    - name: archive-check
+      image: busybox:1.36
+      command: ["/bin/sh", "-c", "sleep 360000"]
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: archive-claim
+
+  nodeSelector:
+    kubernetes.io/hostname: cka-lab-worker
