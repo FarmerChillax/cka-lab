@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  app.properties: |
+    MODE=production
+    REPORT_PATH=/srv/reports
+immutable: true
+kind: ConfigMap
+metadata:
+  name: report-config-v2
+  namespace: cka-config
