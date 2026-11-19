@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-31
+---
+apiVersion: practice.cka.example/v1beta1
+kind: Schedule
+metadata:
+  name: daily
+  namespace: cka-31
+spec:
+  window: '06:00'
+---
+apiVersion: practice.cka.example/v1beta1
+kind: Schedule
+metadata:
+  name: weekly
+  namespace: cka-31
+spec:
+  window: Monday

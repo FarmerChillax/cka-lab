@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-38
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: checkpoint
+  namespace: cka-38
+data:
+  marker: client-cert-ok

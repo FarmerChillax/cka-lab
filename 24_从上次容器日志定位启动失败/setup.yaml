@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-24
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: settings
+  namespace: cka-24
+data:
+  REPORT_MODE: archive
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reporter
+  namespace: cka-24
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reporter
+  template:
+    metadata:
+      labels:
+        app: reporter
+    spec:
+      containers:
+      - name: reporter
+        image: busybox:1.36
+        envFrom:
+        - configMapRef:
+            name: settings
+        command:
+        - sh
+        - "-ec"
+        - 'if [ "$REPORT_MODE" != live ]; then echo "invalid mode: use live" >&2;
+          exit 64; fi; echo "reporter ready"; exec sleep infinity'
+      - name: heartbeat
+        image: busybox:1.36
+        command:
+        - sh
+        - "-c"
+        - echo heartbeat-ok; exec sleep infinity

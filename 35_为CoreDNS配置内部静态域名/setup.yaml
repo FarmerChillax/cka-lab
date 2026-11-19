@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-35
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-probe
+  namespace: cka-35
+spec:
+  containers:
+  - name: client
+    image: busybox:1.36
+    command: ["sleep", "infinity"]

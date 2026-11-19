@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-34
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: report-export
+  namespace: cka-34
+spec:
+  schedule: "0 * * * *"
+  suspend: true
+  concurrencyPolicy: Allow
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: export
+            image: busybox:1.36
+            command: ["sh", "-ec", "echo export-ok"]

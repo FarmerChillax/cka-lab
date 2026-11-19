@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-26
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-observer
+  namespace: cka-26
+spec:
+  updateStrategy:
+    type: OnDelete
+  selector:
+    matchLabels:
+      app: node-observer
+  template:
+    metadata:
+      labels:
+        app: node-observer
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - cka-next-worker
+                - cka-next-worker2
+      containers:
+      - name: observer
+        image: busybox:1.36
+        command:
+        - sleep
+        - infinity
+        env:
+        - name: OBSERVATION_MODE
+          value: basic

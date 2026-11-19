@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-36
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spooler
+  namespace: cka-36
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spooler
+  template:
+    metadata:
+      labels:
+        app: spooler
+    spec:
+      initContainers:
+      - name: prepare
+        image: busybox:1.36
+        command: ["sh", "-ec", "mkdir -m 2770 /spool/inbox"]
+        volumeMounts:
+        - name: spool
+          mountPath: /spool
+      containers:
+      - name: writer
+        image: busybox:1.36
+        command: ["sh", "-ec", "echo spool-ok > /spool/inbox/ready; exec sleep infinity"]
+        securityContext:
+          runAsUser: 10001
+          runAsGroup: 10001
+          runAsNonRoot: true
+        volumeMounts:
+        - name: spool
+          mountPath: /spool
+      volumes:
+      - name: spool
+        emptyDir: {}

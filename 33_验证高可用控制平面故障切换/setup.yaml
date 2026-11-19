@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-33
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: checkpoint
+  namespace: cka-33
+data:
+  phase: baseline

@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cka-28
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: journal
+  namespace: cka-28
+spec:
+  selector:
+    app: journal
+  ports:
+  - port: 80
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: journal
+  namespace: cka-28
+spec:
+  serviceName: journal
+  replicas: 2
+  selector:
+    matchLabels:
+      app: journal
+  template:
+    metadata:
+      labels:
+        app: journal
+    spec:
+      containers:
+      - name: app
+        image: busybox:1.36
+        command:
+        - sleep
+        - infinity
+        volumeMounts:
+        - name: data
+          mountPath: "/data"
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      storageClassName: standard
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 64Mi
